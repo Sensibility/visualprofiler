@@ -72,12 +72,11 @@ def main() -> int:
 
 	stats = pr.getstats()
 	stats.sort(key=lambda x: x.totaltime, reverse=True)
-	print(*stats, sep='\n')
 
 	pygame.init()
 	displayInfo = pygame.display.Info()
 
-	screenSize = (int(displayInfo.current_w//1.5), int(displayInfo.current_h//1.5))
+	screenSize = (int(displayInfo.current_w//2), int(displayInfo.current_h//2))
 	font_size = int(0.013*screenSize[1])
 	white = (255, 255, 255)
 	black = (0, 0, 0)
@@ -101,14 +100,18 @@ def main() -> int:
 
 	squares, colors = [], []
 	for i, (pos, size) in enumerate(statAreas):
+		if isinstance(stats[i].code, str):
+			name = stats[i].code
+		else:
+			name = "%s on line %d in %s" % (stats[i].code.co_name, stats[i].code.co_firstlineno, stats[i].code.co_filename)
 		newcolor = generate_new_color(colors)
 		print(newcolor)
 		colors.append(newcolor)
 		newSurface = pygame.Surface(size)
 		newSurface.fill(newcolor)
-		newText = myFont.render(str(code), 1, black)
+		newText = myFont.render(name, 1, black)
 		newSurface.blit(newText, (size[0]//2 - len(str(code)), size[1]//2 - font_size))
-		squares.append((stats[i].code, pos, newSurface))
+		squares.append((name, pos, newSurface))
 		screen.blit(newSurface, pos)
 
 	pygame.display.update()

@@ -77,7 +77,7 @@ def main() -> int:
 	displayInfo = pygame.display.Info()
 
 	screenSize = (int(displayInfo.current_w//2), int(displayInfo.current_h//2))
-	font_size = int(0.013*screenSize[1])
+	font_size = int(0.02*screenSize[1])
 	white = (255, 255, 255)
 	black = (0, 0, 0)
 	# limeGreen = (50, 205, 50)
@@ -87,11 +87,7 @@ def main() -> int:
 	myFont = pygame.font.SysFont("Calibri", font_size)
 
 
-	normalizedSizes = squarify.normalize_sizes([stat.totaltime for stat in stats], *screenSize)
-	statAreas = [((int(x['x']), int(x['y'])), (int(x['dx']), int(x['dy']))) for x in squarify.squarify(normalizedSizes, 0., 0., *screenSize)]
-
-	print(*(stat[0][0] for stat in statAreas), sep='\n')
-	print()
+	statAreas = squarify.squarify([stat.totaltime for stat in stats], (0, 0), screenSize)
 
 	screen = pygame.display.set_mode(screenSize)
 	pygame.display.set_caption("Profile of '%s'" % progname)
@@ -110,7 +106,7 @@ def main() -> int:
 		newSurface = pygame.Surface(size)
 		newSurface.fill(newcolor)
 		newText = myFont.render(name, 1, black)
-		newSurface.blit(newText, (size[0]//2 - len(str(code)), size[1]//2 - font_size))
+		newSurface.blit(newText, (14, size[1]//2 - font_size))
 		squares.append((name, pos, newSurface))
 		screen.blit(newSurface, pos)
 
